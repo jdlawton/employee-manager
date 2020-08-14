@@ -1,5 +1,7 @@
+USE personnelDB;
+
 INSERT INTO department (name)
-VALUES ("sales"), ("administration"), ("development"), ("information technology");
+VALUES ("sales"), ("administration"), ("development"), ("information technology"), ("accounting");
 
 INSERT INTO role (title, salary, department_id)
 VALUES ("sales person", 65432, 1), ("sales manager", 76543, 1), ("web developer", 65432, 3), ("system administrator", 65432, 4), ("administrative assistant", 54321, 2);
