@@ -6,14 +6,9 @@ Runner.connectionOptions({
    password:"N5D$T*8CmnhK"
 });
  
-const file1_path = __dirname + "/scripts/script1.sql";
+const resetSchema = "./db/schema.sql";
  
-const file2_path = "../script2.sql";
- 
-const file3_path = "./db/schema.sql";
-const file4_path = "./db/seeds.sql";
- 
-Runner.runFile(file3_path, (err)=>{
+Runner.runFile(resetSchema, (err)=>{
    if(err){
       console.log(err);
    } else {

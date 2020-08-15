@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "reset": "node resetSchema.js",
-    "seed": "node seedDB.js",
+    "reset": "node ./scripts/resetSchema.js",
+    "seed": "node ./scripts/seedDB.js",
     "start": "node index.js"
   },
   "author": "Joe Lawton",
