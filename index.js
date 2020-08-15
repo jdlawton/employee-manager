@@ -105,12 +105,58 @@ const displayMenu = () => {
                     });
             });
         }
-
         else if (menuChoice.choice === 'View all employees'){
             employee.view(connection).then(employeeData => {console.table(employeeData[0])}).then(() => {displayMenu()});
         }
+
         else if (menuChoice.choice === 'Add a new employee'){
-            employee.add(connection, {first_name: 'Ted', last_name: 'Gunderson', role_id: 1, manager_id: 3}).then(() => {console.log(`Employee added!`)}).then(() => {displayMenu()});
+            //employee.add(connection, {first_name: 'Ted', last_name: 'Gunderson', role_id: 1, manager_id: 3}).then(() => {console.log(`Employee added!`)}).then(() => {displayMenu()});
+            let roleList = [];
+            let mgrList = [];
+            role.view(connection).then(roleData => {roleData[0].forEach(element => roleList.push(element.title))})/*.then(() => {console.log(roleList)})*/;
+            employee.view(connection).then(mgrData => {mgrData[0].forEach(element => mgrList.push(element.first_name+' '+element.last_name))})/*.then(() => {console.log(mgrList)})*/;
+            inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'first_name',
+                    message: "Please enter the employee's first name:"
+                },
+                {
+                    type: 'input',
+                    name: 'last_name',
+                    message: "Please enter the employee's last name:"
+                },
+                {
+                    type: 'list',
+                    name: 'role_id',
+                    messsage: "Please select the employee's role:",
+                    choices: roleList
+                },
+                {
+                    type: 'list',
+                    name: 'manager_id',
+                    message: "Please select the manager the employee will be reporting to:",
+                    choices: mgrList
+                }
+            ]).then(newEmp => {
+                role.lookupId(connection, newEmp.role_id)
+                .then(roleId => {
+                    newEmp.role_id = roleId[0][0].id;
+                    return newEmp;
+                }).then(newEmp => {
+                    employee.lookupId(connection, newEmp.manager_id)
+                    .then(mgrId => {
+                        newEmp.manager_id = mgrId[0][0].id;
+                        return newEmp;
+                    }).then(newEmp => {
+                        //console.log(newEmp);
+                        employee.add(connection, newEmp).then(() => {console.log(`Employee added!`)}).then(() => {displayMenu()});
+                    });
+                });
+            });
+
+            
+
         }
         else if (menuChoice.choice === "Update an employee's role"){
             let newRoleId = {role_id:2};
