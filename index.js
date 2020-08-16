@@ -69,6 +69,29 @@ const displayMenu = () => {
             });
 
         }
+        else if (menuChoice.choice === 'Delete a department'){
+            let deptList = [];
+            //dept.view(connection).then(deptData => {deptData[0].forEach(element => deptList.push(element.name))}).then(() => {console.log(deptList)});
+            dept.view(connection).then(deptData => {deptData[0].forEach(element => deptList.push(element.name))}).then(() => {
+                inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'name',
+                        message: "Please select the department to delete:(YOU CAN ONLY DELETE A DEPT WITH NO ASSIGNED ROLES!)",
+                        choices: deptList
+                    }
+                ]).then(deptChoice => {
+                    //console.log(deptChoice);
+                    dept.lookupId(connection, deptChoice.name).then(deptId => {
+                        dept.delete(connection, deptId[0][0].id).then(() => {console.log(`Department deleted!`)}).then(() => {displayMenu()});
+                    });
+                });
+            });
+
+        }
+        else if (menuChoice.choice === "View a department's utilized budget"){
+            dept.utilizedBudget(connection).then(deptData => {console.table(deptData[0])}).then(() => {displayMenu()});
+        }
         else if (menuChoice.choice === 'View all company roles'){
             role.view(connection).then(roleData => {console.table(roleData[0])}).then(() => {displayMenu()});
         }
@@ -104,6 +127,28 @@ const displayMenu = () => {
                         role.add(connection, newRole).then(() => {console.log(`Role added!`)}).then(() => {displayMenu()});
                     });
             });
+        }
+        else if (menuChoice.choice === 'Delete a role'){
+            let roleList = [];
+            //role.view(connection).then(roleData => {roleData[0].forEach(element => roleList.push(element.title))}).then(() => {console.log(roleList)});
+            
+            role.view(connection).then(roleData => {roleData[0].forEach(element => roleList.push(element.title))}).then(() => {
+                //console.log(roleList);
+                inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'title',
+                        message: "Please select the role to delete:(YOU CAN ONLY DELETE A ROLE THAT HAS NOONE ASSIGNED TO IT!)",
+                        choices: roleList
+                    }
+                ]).then(roleChoice => {
+                    //console.log(roleChoice);
+                    role.lookupId(connection, roleChoice.title).then(roleId => {
+                        role.delete(connection, roleId[0][0].id).then(() => {console.log(`Role deleted!`)}).then(() => {displayMenu()});
+                    });
+                });
+            });
+
         }
         else if (menuChoice.choice === 'View all employees'){
             employee.view(connection).then(employeeData => {console.table(employeeData[0])}).then(() => {displayMenu()});
@@ -177,25 +222,92 @@ const displayMenu = () => {
                         message: "Please select that employee's new role:",
                         choices: roleList
                     }
-                ]).then(newEmp => {
+                ]).then(newEmpRole => {
                     //console.log(newRole);
-                    role.lookupId(connection, newEmp.role_id)
+                    role.lookupId(connection, newEmpRole.role_id)
                 .then(roleId => {
-                    newEmp.role_id = roleId[0][0].id;
-                    return newEmp;
-                }).then(newEmp => {
-                    employee.lookupId(connection, newEmp.id)
+                    newEmpRole.role_id = roleId[0][0].id;
+                    return newEmpRole;
+                }).then(newEmpRole => {
+                    employee.lookupId(connection, newEmpRole.id)
                     .then(empId => {
-                        newEmp.id = empId[0][0].id;
-                        return newEmp;
-                    }).then(newEmp => {
-                        console.log(newEmp);
-                        employee.updateRole(connection, {role_id: newEmp.role_id}, {id: newEmp.id}).then(() => {console.log(`Employee updated!`)}).then(() => {displayMenu()});
+                        newEmpRole.id = empId[0][0].id;
+                        return newEmpRole;
+                    }).then(newEmpRole => {
+                        console.log(newEmpRole);
+                        employee.updateRole(connection, {role_id: newEmpRole.role_id}, {id: newEmpRole.id}).then(() => {console.log(`Employee updated!`)}).then(() => {displayMenu()});
                     });
                 });
                     
                 });
             });
+        }
+        else if (menuChoice.choice === "Update an employee's manager"){
+            let empList = [];
+            let mgrList = [];
+            employee.view(connection).then(empData => {empData[0].forEach(element => empList.push(element.first_name+' '+element.last_name))}).then(() => {console.log(empList)});
+            //employee.view(connection).then(empData => {empData[0].forEach(element => mgrList.push(element.first_name+' '+element.last_name))}).then(() => {console.log(mgrList)});
+            employee.view(connection).then(empData => {empData[0].forEach(element => mgrList.push(element.first_name+' '+element.last_name))}).then(() => {
+                inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'id',
+                        message: "Please select the employee to update:",
+                        choices: empList
+                    },
+                    {
+                        type: 'list',
+                        name: 'manager_id',
+                        message: "Please select that employee's new manager:",
+                        choices: mgrList
+                    }
+                ]).then(newEmpMgr => {
+                    //console.log(newRole);
+                    employee.lookupId(connection, newEmpMgr.id)
+                .then(empId => {
+                    newEmpMgr.id = empId[0][0].id;
+                    return newEmpMgr;
+                }).then(newEmpMgr => {
+                    employee.lookupId(connection, newEmpMgr.manager_id)
+                    .then(mgrId => {
+                        newEmpMgr.manager_id = mgrId[0][0].id;
+                        return newEmpMgr;
+                    }).then(newEmpMgr => {
+                        console.log(newEmpMgr);
+                        employee.updateManager(connection, {manager_id: newEmpMgr.manager_id}, {id: newEmpMgr.id}).then(() => {console.log(`Employee updated!`)}).then(() => {displayMenu()});
+                    });
+                });
+                    
+                });
+            });
+        }
+        else if (menuChoice.choice === 'View employees by department'){
+            employee.viewByDept(connection).then(employeeData => {console.table(employeeData[0])}).then(() => {displayMenu()});
+        }
+        else if (menuChoice.choice === 'View employees by manager'){
+            employee.viewByManager(connection).then(employeeData => {console.table(employeeData[0])}).then(() => {displayMenu()});
+        }
+        else if (menuChoice.choice === 'Delete an employee'){
+            let empList = [];
+            //employee.view(connection).then(empData => {empData[0].forEach(element => empList.push(element.first_name+' '+element.last_name))}).then(() => {console.log(empList)});
+            
+            employee.view(connection).then(empData => {empData[0].forEach(element => empList.push(element.first_name+' '+element.last_name))}).then(() => {
+                //console.log(empList);
+                inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'name',
+                        message: "Please select the employee to delete:",
+                        choices: empList
+                    }
+                ]).then(empChoice => {
+                    //console.log(empChoice);
+                    employee.lookupId(connection, empChoice.name).then(empId => {
+                        employee.delete(connection, empId[0][0].id).then(() => {console.log(`Employee deleted!`)}).then(() => {displayMenu()});
+                    });
+                });
+            });
+
         }
         else if (menuChoice.choice === 'Quit Employee Manager'){
             console.log("Goodbye!");
