@@ -154,15 +154,54 @@ const displayMenu = () => {
                     });
                 });
             });
-
-            
-
         }
         else if (menuChoice.choice === "Update an employee's role"){
-            let newRoleId = {role_id:2};
-            let empId = {id:7};
-            employee.updateRole(connection, newRoleId, empId).then(() => {console.log(`Employee updated!`)}).then(() => {displayMenu()});
+            //let newRoleId = {role_id:2};
+            //let empId = {id:7};
+            //employee.updateRole(connection, newRoleId, empId).then(() => {console.log(`Employee updated!`)}).then(() => {displayMenu()});
+            let roleList = [];
+            let empList = [];
+            role.view(connection).then(roleData => {roleData[0].forEach(element => roleList.push(element.title))}).then(() => {console.log(roleList)});
+            //employee.view(connection).then(empData => {empData[0].forEach(element => empList.push(element.first_name+' '+element.last_name))}).then(() => {console.log(empList)});
+            employee.view(connection).then(empData => {empData[0].forEach(element => empList.push(element.first_name+' '+element.last_name))}).then(() => {
+                inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'id',
+                        message: "Please select the employee to update:",
+                        choices: empList
+                    },
+                    {
+                        type: 'list',
+                        name: 'role_id',
+                        message: "Please select that employee's new role:",
+                        choices: roleList
+                    }
+                ]).then(newEmp => {
+                    //console.log(newRole);
+                    role.lookupId(connection, newEmp.role_id)
+                .then(roleId => {
+                    newEmp.role_id = roleId[0][0].id;
+                    return newEmp;
+                }).then(newEmp => {
+                    employee.lookupId(connection, newEmp.id)
+                    .then(empId => {
+                        newEmp.id = empId[0][0].id;
+                        return newEmp;
+                    }).then(newEmp => {
+                        console.log(newEmp);
+                        employee.updateRole(connection, {role_id: newEmp.role_id}, {id: newEmp.id}).then(() => {console.log(`Employee updated!`)}).then(() => {displayMenu()});
+                    });
+                });
+                    
+                });
+            });
         }
+        else if (menuChoice.choice === 'Quit Employee Manager'){
+            console.log("Goodbye!");
+            endConnection();
+        }
+
     });
 }
 
