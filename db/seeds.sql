@@ -3,10 +3,10 @@
 USE personnelDB;
 
 INSERT INTO department (name)
-VALUES ("sales"), ("administration"), ("development"), ("information technology"), ("accounting");
+VALUES ("sales"), ("information technology"), ("accounting");
 
 INSERT INTO role (title, salary, department_id)
-VALUES ("sales person", 65432, 1), ("sales manager", 76543, 1), ("web developer", 65432, 3), ("system administrator", 65432, 4), ("administrative assistant", 54321, 2);
+VALUES ("sales person", 50000, 1), ("sales manager", 60000, 1), ("web developer", 50000, 2), ("system administrator", 60000, 2), ("accountant", 50000, 3), ("accounts manager", 60000, 3), ("sales intern", 30000, 1);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Manager", "Man", 3, null), ("Joe", "Lawton", 3, 1), ("Sales", "Manager", 2, null), ("Sales", "Guy", 1, 3), ("Mr", "UNIX", 4, null), ("Girl", "Friday", 5, null);
+VALUES ("Mary", "Lewis", 2, null), ("Duncan", "Alan", 1, 1), ("Kelly", "Green", 1, 1), ("Jim", "Wilson", 4, null), ("Joe", "Lawton", 3, 4), ("Daniel", "Olson", 6, null), ("Rebecca", "Martin", 5, 6);

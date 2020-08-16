@@ -222,7 +222,7 @@ const displayMenu = () => {
         else if (menuChoice.choice === "Update an employee's role"){ 
             let roleList = [];
             let empList = [];
-            role.view(connection).then(roleData => {roleData[0].forEach(element => roleList.push(element.title))}).then(() => {console.log(roleList)}).catch(console.log); 
+            role.view(connection).then(roleData => {roleData[0].forEach(element => roleList.push(element.title))}).catch(console.log); 
             employee.view(connection).then(empData => {empData[0].forEach(element => empList.push(element.first_name+' '+element.last_name))}).then(() => {
                 inquirer.prompt([
                     {
