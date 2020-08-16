@@ -8,8 +8,9 @@
 
   ## Walkthrough Video
   NOTE: Screencastify only allows 5 min videos for the free version of the plug-in and I ran out of time due to the number of features I was demonstrating in the video, so it got broken up into two parts:
-  [PART 1](https://drive.google.com/file/d/1Mn9_5LdTg1pvjS2kkj2KPM8ZUmOoK-mX/view)
   
+  [PART 1](https://drive.google.com/file/d/1Mn9_5LdTg1pvjS2kkj2KPM8ZUmOoK-mX/view)
+
   [PART 2](https://drive.google.com/file/d/1Pfbge3JAUeYF_wFdGCmiGM5yYpJCPUa8/view)
 
 
