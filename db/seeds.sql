@@ -1,3 +1,5 @@
+/*the seeds file for the application databases. This file gets called when the npm script "seed" is invoked*/
+
 USE personnelDB;
 
 INSERT INTO department (name)

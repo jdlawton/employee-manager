@@ -1,3 +1,5 @@
+/*the schema file for the application databases. This file gets called when the npm script "reset" is invoked*/
+
 DROP DATABASE IF EXISTS personnelDB;
 
 CREATE DATABASE personnelDB;
